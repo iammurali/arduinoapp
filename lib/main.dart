@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String url = 'http://192.168.1.3:8081/mob/getmachines';
+  String url = 'http://192.168.43.94:8081/mob/getmachines';
   List data;
   fetchPost() async {
     final response = await http.get(url);
@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (BuildContext context, i) {
             return new ListTile(
               title: new Text(data[i]["machinename"]),
-              subtitle: new Text(data[i]["machineStaus"].toString()),
+              subtitle: new Text(data[i]["elapsedTime"].toString()),
               trailing:  _buildChild(data[i]["machineStaus"]),
               onTap: () {
                 Navigator.push(

@@ -49,9 +49,9 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
   @override
   Widget build(BuildContext context) {
  var data = [
-      new ClicksPerYear('Problem', 12, Colors.red),
-      new ClicksPerYear('Off time', 32, Colors.yellow),
-      new ClicksPerYear('On Time', 65, Colors.green),
+      new ClicksPerYear('Problem', widget.value["problemtime"].round(), Colors.red),
+      new ClicksPerYear('idle time', widget.value["elapsedTime"].round(), Colors.yellow),
+      new ClicksPerYear('On Time', widget.value["idleTime"].round(), Colors.green),
     ];
 
     var series = [
@@ -86,6 +86,9 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            new Text("Total on time:" + widget.value["elapsedTime"].toString()),
+            new Text("Total problem time:" + widget.value["problemtime"].toString()),
+            new Text("Total idle time:" + widget.value["idleTime"].toString()),
             _buildChild(widget.value["machineStaus"]),
             chartWidget,
           ],

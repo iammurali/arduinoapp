@@ -1,0 +1,8 @@
+colours 
+pecentage
+products prodice
+graphs
+
+feedback reason
+
+problem feeding option
