@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:arduinoapp/second_screen.dart';
-
+import 'pages/settings.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:arduinoapp/services/shared_preferencetest.dart';
 
 void main() => runApp(new MyApp());
 
@@ -13,7 +14,46 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      home: new MyHomePage(),
+        theme: ThemeData(
+                brightness: Brightness.dark,
+                primaryColor: Colors.grey[800],
+                accentColor:Colors.red,
+              ),
+      home: DefaultTabController(
+        length: 2,
+        child: new Scaffold(
+          body: TabBarView(
+            children: [
+              new MyHomePage(),
+              // new Container(color: Colors.orange,),
+              // new Container(
+              //   color: Colors.lightGreen,
+              // ),
+              new SettingsPage(),
+            ],
+          ),
+          bottomNavigationBar: new TabBar(
+            tabs: [
+              Tab(
+                icon: new Icon(Icons.home),
+              ),
+              // Tab(
+              //   icon: new Icon(Icons.rss_feed),
+              // ),
+              // Tab(
+              //   icon: new Icon(Icons.perm_identity),
+              // ),
+              Tab(icon: new Icon(Icons.settings),)
+            ],
+            labelColor: Colors.red,
+            unselectedLabelColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorPadding: EdgeInsets.all(5.0),
+            indicatorColor: Colors.red,
+          ),
+          // backgroundColor: Colors.blue,
+        ),
+),
     );
   }
 }
@@ -24,11 +64,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String url = 'http://192.168.43.94:8081/mob/getmachines';
   List data;
   fetchPost() async {
-    final response = await http.get(url);
+    final String ip = await SharedPreferencesTest().getIpAdress();
+  String url = 'http://'+ip+'/mob/getmachines';
 
+    print("thisisthe url" + url);
+    final response = await http.get(url);
     if (response.statusCode == 200) {
       // If the call to the server was successful, parse the JSON
 
@@ -44,11 +86,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     this.fetchPost();
-    print("heueudladsaljdfldsadfasd");
+    // this.getIp();
   }
+
+  
 
   _iconBuilder(IconData icon, String status, MaterialColor color) {
     return new Column(
@@ -75,8 +119,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      // backgroundColor: Colors.black,
       appBar: new AppBar(
+        // backgroundColor: Colors.grey[800],
         title: new Text('Machine List'),
+        actions: <Widget>[
+          FutureBuilder<String>(
+              // get the languageCode, saved in the preferences
+              future: SharedPreferencesTest().getIpAdress(),
+              initialData: 'en',
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                return snapshot.hasData
+                    ? _buildFlag(snapshot.data)
+                    : Container();
+              }),
+            ],
       ),
       body: new ListView.builder(
           itemCount: data == null ? 0 : data.length,
@@ -99,10 +156,29 @@ class _MyHomePageState extends State<MyHomePage> {
           }),
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.refresh),
-          backgroundColor: Colors.blue,
+          
           onPressed: () {
             fetchPost();
           }),
     );
+  }
+
+  _buildFlag(String value){
+    if(value == "null"){
+     return Icon(Icons.broken_image,color:Colors.red);
+    }else{
+      return  FlatButton(
+                onPressed: () => {},
+                color: Colors.green,
+                padding: EdgeInsets.all(5.0),
+                child: Column( // Replace with a Row for horizontal icon + text
+                  children: <Widget>[
+                    Icon(Icons.traffic),
+                    Text(value)
+                  ],
+                ),
+              );
+    }
+
   }
 }
