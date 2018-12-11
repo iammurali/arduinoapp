@@ -103,9 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
 
         setState(() {
-              _blinkOnColor = Colors.green;
-              _blinkProblemColor = Colors.red;
-              _blinkIdleColor = Colors.yellow;
+              _blinkOnColor = Colors.lightGreen[400];
+              _blinkProblemColor = Colors.redAccent;
+              _blinkIdleColor = Colors.yellow[200];
         });
               _blinkStatus = 0;
     }else{
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     }
     if (machinestatus == 1) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime, _blinkOnColor, Colors.red[600], Colors.yellow[200]); //on
+      return _iconBuilder(elapsedTime, problemTime, idleTime, _blinkOnColor, Colors.redAccent, Colors.yellow[200]); //on
 
     }
     if (machinestatus == 3) {
@@ -203,11 +203,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             new Row(
+              
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
 
-                new Container(padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),child: Text(formattedDate,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.cyanAccent[400])),),
+                new Container(padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                color: Colors.white,
+                child: Text(formattedDate,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.cyanAccent[400])),),
               Text("RUN TIME",style: TextStyle(fontWeight: FontWeight.bold)),
               Text("STOP TIME",style: TextStyle(fontWeight: FontWeight.bold)),
               Text("DOWN TIME",style: TextStyle(fontWeight: FontWeight.bold))

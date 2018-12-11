@@ -63,18 +63,19 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
     }
 
 
-         var data = [
-           new ClicksPerYear('STOP TIME', widget.value["problemtime"].round(), Colors.red),
-           new ClicksPerYear('RUN TIME', widget.value["elapsedTime"].round(), Colors.green),
-           new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent)
+    var data = [
+      new ClicksPerYear('STOP TIME', widget.value["problemtime"].round(), Colors.red),
+      new ClicksPerYear('RUN TIME', widget.value["elapsedTime"].round(), Colors.green),
+      new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent)
 //           new ClicksPerYear('TIME', widget.value["idleTime"].round(), Colors.green)
-         ];
+    ];
 
     var series = [
       new charts.Series(
         domainFn: (ClicksPerYear clickData, _) => clickData.year,
         measureFn: (ClicksPerYear clickData, _) => clickData.clicks,
         colorFn: (ClicksPerYear clickData, _) => clickData.color,
+        labelAccessorFn: (ClicksPerYear clickData, _) => clickData.clicks.toString(),
         id: 'Clicks',
         data: data,
       ),
@@ -83,6 +84,13 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
     var chart = new charts.BarChart(
       series,
       animate: true,
+      vertical: false,
+      // primaryMeasureAxis: ,
+       barRendererDecorator: new charts.BarLabelDecorator<String>(
+          insideLabelStyleSpec: new charts.TextStyleSpec(color: charts.Color(r: 0, g: 0, b: 0)),
+          outsideLabelStyleSpec: new charts.TextStyleSpec(color: charts.Color(r: 255, g: 255, b: 255))
+       ),
+       
     );
 
      var chartWidget = new Container(
