@@ -6,6 +6,8 @@ import 'pages/settings.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arduinoapp/services/shared_preferencetest.dart';
+//import 'package:octal_clock/octal_clock.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(new MyApp());
 
@@ -90,39 +92,56 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     this.fetchPost();
     // this.getIp();
+    const threeSec = const Duration(seconds:3);
+    new Timer.periodic(threeSec, (Timer t) => this.fetchPost());
   }
 
-  
-
-  _iconBuilder(IconData icon, String status, MaterialColor color) {
-    return new Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[Icon(icon, color: color), new Text(status)],
+  _iconBuilder(String elapsedTime, String problemTime, String idleTime, Color onColor, Color problemColor, Color IdleColor ) {
+    return new  Row(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+    FlatButton(color: onColor, onPressed: () => {}, child: Text(elapsedTime, style: TextStyle(color: Colors.black),),),
+    FlatButton(color: problemColor, onPressed: () => {}, child: Text(problemTime,style: TextStyle(color: Colors.black))),
+    FlatButton(color: IdleColor, onPressed: () => {}, child: Text(idleTime,style: TextStyle(color: Colors.black)))
+    ],
     );
   }
 
-  _buildChild(int machinestatus) {
-    print("machine status" + machinestatus.toString());
-    if (machinestatus == 0) {
-      return _iconBuilder(
-          Icons.airline_seat_individual_suite, "OFF", Colors.blue);
+
+  _buildChild(int machinestatus, String elapsedTime, String problemTime, String idleTime) {
+
+    print("elapsedTime " + elapsedTime);
+    if (machinestatus == 4) {
+      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreen[400], Colors.redAccent, Colors.yellowAccent[700]); //idle
+
     }
     if (machinestatus == 1) {
-      return _iconBuilder(Icons.flash_on, "ON", Colors.green);
+      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreenAccent[400], Colors.red[600], Colors.yellow[200]); //on
+
     }
     if (machinestatus == 3) {
-      return _iconBuilder(Icons.broken_image, "PROBLEM", Colors.red);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.deepOrangeAccent[400], Colors.yellow[200]);//PROBLEM
+    }
+    if(machinestatus == 2){
+      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
+    }
+    if(machinestatus == 0){
+      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
+    }
+    if(machinestatus == 5){
+      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd - kk:mm').format(now);
     return new Scaffold(
       // backgroundColor: Colors.black,
       appBar: new AppBar(
         // backgroundColor: Colors.grey[800],
-        title: new Text('Machine List'),
+        title: new Text('Machine List', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: <Widget>[
           FutureBuilder<String>(
               // get the languageCode, saved in the preferences
@@ -135,31 +154,57 @@ class _MyHomePageState extends State<MyHomePage> {
               }),
             ],
       ),
-      body: new ListView.builder(
-          itemCount: data == null ? 0 : data.length,
-          itemBuilder: (BuildContext context, i) {
-            return new ListTile(
-              title: new Text(data[i]["machinename"]),
-              subtitle: new Text(data[i]["elapsedTime"].toString()),
-              trailing:  _buildChild(data[i]["machineStaus"]),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SecondScreen(data[i])));
-              },
-              // leading: new CircleAvatar(
-              //   backgroundImage:
-              //       new NetworkImage('https://cdn3.iconfinder.com/data/icons/gears-4/110/Gearssmall-512.png'),
-              // )
-            );
-          }),
+      body:
+        new Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            new Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+
+                new Container(padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),child: Text(formattedDate,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.cyanAccent[400])),),
+              Text("RUN TIME",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("STOP TIME",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("DOWN TIME",style: TextStyle(fontWeight: FontWeight.bold))
+            ],),
+            new Expanded(
+                child: new Container(
+//                  decoration: new BoxDecoration(color: Colors.blue),
+//                  height: 200.0,
+                  child: new ListView.builder(
+                      itemCount: data == null ? 0 : data.length,
+                      itemBuilder: (BuildContext context, i) {
+                        return new ListTile(
+                          title: new Text(data[i]["machinename"]),
+//                          subtitle: new Text(data[i]["elapsedTime"].toString()+"%"),
+                          trailing: _buildChild(
+                              data[i]["machineStaus"],
+                              data[i]["elapsedTime"].toString()+"%",
+                              data[i]["problemtime"].toString()+"%",
+                              data[i]["idleTime"].toString()+"%"
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SecondScreen(data[i]))
+                            );
+                          },
+
+                        );
+                      }),
+                )
+            )
+          ]
+      ),
       floatingActionButton: new FloatingActionButton(
           child: new Icon(Icons.refresh),
           
           onPressed: () {
             fetchPost();
-          }),
+          }
+          ),
     );
   }
 

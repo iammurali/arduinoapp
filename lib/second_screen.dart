@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+//import 'package:octal_clock/octal_clock.dart';
 
 class SecondScreen extends StatefulWidget {
   final value;
@@ -35,24 +36,39 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
   }
   _buildChild(int machinestatus){
     print("machine status"+machinestatus.toString());
-    if(machinestatus == 0){
-      return _iconBuilder(Icons.airline_seat_individual_suite, "OFF", Colors.blue);
+    if(machinestatus == 4){
+      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS : DOWN", Colors.yellow);
     }
      if(machinestatus == 1){
-      return _iconBuilder(Icons.flash_on, "ON", Colors.green);
+      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS: RUN", Colors.green);
     }
      if(machinestatus == 3){
-      return _iconBuilder(Icons.broken_image, "Problem", Colors.red);
+      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS: STOP", Colors.red);
+    }
+    if(machinestatus == 0){
+      return _iconBuilder(Icons.broken_image, "", Colors.red);
     }
   }
 
   @override
   Widget build(BuildContext context) {
- var data = [
-      new ClicksPerYear('Problem', widget.value["problemtime"].round(), Colors.red),
-      new ClicksPerYear('idle time', widget.value["elapsedTime"].round(), Colors.yellow),
-      new ClicksPerYear('On Time', widget.value["idleTime"].round(), Colors.green),
-    ];
+
+    _printMachineStatus(){
+
+      if(widget.value["machineStaus"]==1){return new Text("AIDA 1 STATUS : RUNNING");}
+      if(widget.value["machineStaus"]==4){return new Text("AIDA 1 STATUS : DOWN");}
+      if(widget.value["machineStaus"]==3){return new Text("AIDA 1 STATUS : STOPED");}
+      if(widget.value["machineStaus"]==0){return new Text("AIDA 1 STATUS : OFF");}
+
+    }
+
+
+         var data = [
+           new ClicksPerYear('STOP TIME', widget.value["problemtime"].round(), Colors.red),
+           new ClicksPerYear('RUN TIME', widget.value["elapsedTime"].round(), Colors.green),
+           new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent)
+//           new ClicksPerYear('TIME', widget.value["idleTime"].round(), Colors.green)
+         ];
 
     var series = [
       new charts.Series(
@@ -69,10 +85,12 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
       animate: true,
     );
 
-     var chartWidget = new Padding(
-      padding: new EdgeInsets.all(32.0),
+     var chartWidget = new Container(
+      // margin: const EdgeInsets.all(1.0),
+      color: const Color(0xFF607D8B),
       child: new SizedBox(
         height: 200.0,
+        width: 300.0,
         child: chart,
       ),
     );
@@ -82,18 +100,106 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
       appBar: AppBar(
         title: Text(widget.value["machinename"]),
       ),
-      body: new Center(
+
+
+
+
+
+        body: SingleChildScrollView(child:new Center(
         child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Text("Total on time:" + widget.value["elapsedTime"].toString()),
-            new Text("Total problem time:" + widget.value["problemtime"].toString()),
-            new Text("Total idle time:" + widget.value["idleTime"].toString()),
-            _buildChild(widget.value["machineStaus"]),
-            chartWidget,
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                FlatButton( onPressed: () => {}, child: Text(""),padding: EdgeInsets.all(5.0),),
+                Chip(
+
+                    label: Text('B',style: TextStyle(color: Colors.cyanAccent))
+                ),
+                Chip(
+
+                    label: Text('A',style: TextStyle(color: Colors.cyanAccent))
+                ),
+                Chip(
+
+                    label: Text('C',style: TextStyle(color: Colors.cyanAccent))
+                ),
+
+                Container(
+                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+                ),
+              ],
+            ),
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton( onPressed: () => {}, child: Text(""),padding: EdgeInsets.all(2.0),),
+                Chip(
+                  label: Text('8.00 - 4.15'),
+                ),
+                Chip(
+                  label: Text('4.15 - 24.00'),
+                ),
+                Chip(
+                  label: Text('00.0-8.0'),
+                ),
+              ],
+            ),
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(color: Colors.black54, onPressed: () => {}, child: Text("RUN TIME    : "),padding: EdgeInsets.all(5.0),),
+                FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
+              ],
+            ),
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(color: Colors.black54, onPressed: () => {}, child: Text("DOWN TIME :"),padding: EdgeInsets.all(5.0),),
+                FlatButton(color: Colors.yellow, onPressed: () => {}, child: Text(widget.value["idleTimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.yellow, onPressed: () => {}, child: Text(widget.value["idleTimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.yellow, onPressed: () => {}, child: Text(widget.value["idleTimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
+              ],
+            ),
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(color: Colors.black54, onPressed: () => {}, child: Text("STOP TIME : "),padding: EdgeInsets.all(5.0),),
+                FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
+              ],
+            ),
+
+
+            new Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _printMachineStatus(),
+
+              ],
+            ),
+            new Row(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                 // ignore: list_element_type_not_assignable
+                  chartWidget,
+               // new Text("hello world")
+              ],
+            )
           ],
+        )
       ),
-      )
+        )
     );
   }
 }
