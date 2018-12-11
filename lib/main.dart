@@ -67,6 +67,58 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List data;
+  Timer _timer;
+  Timer _blinkTimer;
+  Color _blinkOnColor;
+  Color _blinkProblemColor;
+  Color _blinkIdleColor;
+  int _blinkStatus;
+
+  @override
+  void initState(){
+    super.initState();
+    this.fetchPost();
+    _blinkOnColor = Colors.transparent;
+    _blinkStatus = 1;
+    // this.getIp();
+    const threeSec = const Duration(seconds:3);
+     const oneSec = const Duration(seconds:1);
+    _timer = new Timer.periodic(threeSec, (Timer t) => this.fetchPost());
+    _blinkTimer = new Timer.periodic(oneSec, (Timer t) =>this.changeColor());
+  }
+
+
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _blinkTimer.cancel();
+    super.dispose();
+  }
+
+  changeColor(){
+      // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
+
+    if(_blinkStatus == 1){
+      // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
+
+        setState(() {
+              _blinkOnColor = Colors.green;
+              _blinkProblemColor = Colors.red;
+              _blinkIdleColor = Colors.yellow;
+        });
+              _blinkStatus = 0;
+    }else{
+      // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
+        setState(() {
+                      _blinkOnColor = Colors.transparent;
+                      _blinkProblemColor = Colors.transparent;
+                      _blinkIdleColor = Colors.transparent;
+          });
+          _blinkStatus = 1;
+    }
+
+  }
   fetchPost() async {
     final String ip = await SharedPreferencesTest().getIpAdress();
   String url = 'http://'+ip+'/mob/getmachines';
@@ -83,17 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     } else {
       // If that call was not successful, throw an error.
+      print('*************failed to load*****************');
       throw Exception('Failed to load post');
     }
-  }
-
-  @override
-  void initState(){
-    super.initState();
-    this.fetchPost();
-    // this.getIp();
-    const threeSec = const Duration(seconds:3);
-    new Timer.periodic(threeSec, (Timer t) => this.fetchPost());
   }
 
   _iconBuilder(String elapsedTime, String problemTime, String idleTime, Color onColor, Color problemColor, Color IdleColor ) {
@@ -112,15 +156,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
     print("elapsedTime " + elapsedTime);
     if (machinestatus == 4) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreen[400], Colors.redAccent, Colors.yellowAccent[700]); //idle
+      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreen[400], Colors.redAccent, _blinkIdleColor); //idle
 
     }
     if (machinestatus == 1) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreenAccent[400], Colors.red[600], Colors.yellow[200]); //on
+      return _iconBuilder(elapsedTime, problemTime, idleTime, _blinkOnColor, Colors.red[600], Colors.yellow[200]); //on
 
     }
     if (machinestatus == 3) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.deepOrangeAccent[400], Colors.yellow[200]);//PROBLEM
+      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], _blinkProblemColor, Colors.yellow[200]);//PROBLEM
     }
     if(machinestatus == 2){
       return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
