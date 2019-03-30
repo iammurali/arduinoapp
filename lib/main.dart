@@ -72,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color _blinkOnColor;
   Color _blinkProblemColor;
   Color _blinkIdleColor;
+ Color _blinkoffColor;
   int _blinkStatus;
 
   @override
@@ -106,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _blinkOnColor = Colors.lightGreen[400];
               _blinkProblemColor = Colors.redAccent;
               _blinkIdleColor = Colors.yellow[200];
+              _blinkoffColor = Colors.blue;
         });
               _blinkStatus = 0;
     }else{
@@ -114,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       _blinkOnColor = Colors.transparent;
                       _blinkProblemColor = Colors.transparent;
                       _blinkIdleColor = Colors.transparent;
+                      _blinkoffColor = Colors.transparent;
           });
           _blinkStatus = 1;
     }
@@ -140,40 +143,41 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  _iconBuilder(String elapsedTime, String problemTime, String idleTime, Color onColor, Color problemColor, Color IdleColor ) {
+  _iconBuilder(String elapsedTime, String problemTime, String idleTime,String offtime,  Color onColor, Color problemColor, Color IdleColor,Color offColor, ) {
     return new  Row(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
     FlatButton(color: onColor, onPressed: () => {}, child: Text(elapsedTime, style: TextStyle(color: Colors.black),),),
     FlatButton(color: problemColor, onPressed: () => {}, child: Text(problemTime,style: TextStyle(color: Colors.black))),
-    FlatButton(color: IdleColor, onPressed: () => {}, child: Text(idleTime,style: TextStyle(color: Colors.black)))
+    FlatButton(color: IdleColor, onPressed: () => {}, child: Text(idleTime,style: TextStyle(color: Colors.black))),
+    FlatButton(color: offColor, onPressed: () => {}, child: Text(offtime,style: TextStyle(color: Colors.black)))
+
     ],
     );
   }
 
 
-  _buildChild(int machinestatus, String elapsedTime, String problemTime, String idleTime) {
+  _buildChild(int machinestatus, String elapsedTime, String problemTime, String idleTime, String offtime) {
 
     print("elapsedTime " + elapsedTime);
     if (machinestatus == 4) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime, Colors.lightGreen[400], Colors.redAccent, _blinkIdleColor); //idle
-
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime, Colors.lightGreen[400], Colors.redAccent, _blinkIdleColor,Colors.blue); //idle
     }
     if (machinestatus == 1) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime, _blinkOnColor, Colors.redAccent, Colors.yellow[200]); //on
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime, _blinkOnColor, Colors.redAccent, Colors.yellow,Colors.blue); //on
 
     }
     if (machinestatus == 3) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], _blinkProblemColor, Colors.yellow[200]);//PROBLEM
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], _blinkProblemColor, Colors.yellow[200],Colors.blue);//PROBLEM
     }
     if(machinestatus == 2){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],Colors.blue);
     }
     if(machinestatus == 0){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],_blinkoffColor);//OFF
     }
     if(machinestatus == 5){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200]);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],Colors.blue);
     }
   }
 
@@ -211,10 +215,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 new Container(padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                 color: Colors.white,
                 child: Text(formattedDate,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.cyanAccent[400])),),
-              Text("RUN TIME",style: TextStyle(fontWeight: FontWeight.bold)),
-              Text("STOP TIME",style: TextStyle(fontWeight: FontWeight.bold)),
-              Text("DOWN TIME",style: TextStyle(fontWeight: FontWeight.bold))
-            ],),
+              Text("RUN",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("STOP",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("DOWN",style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("OFF",style: TextStyle(fontWeight: FontWeight.bold)),
+
+              ],),
             new Expanded(
                 child: new Container(
 //                  decoration: new BoxDecoration(color: Colors.blue),
@@ -229,7 +235,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               data[i]["machineStaus"],
                               data[i]["elapsedTime"].toString()+"%",
                               data[i]["problemtime"].toString()+"%",
-                              data[i]["idleTime"].toString()+"%"
+                              data[i]["idleTime"].toString()+"%",
+                              data[i]["offtime"].toString()+"%"
                           ),
                           onTap: () {
                             Navigator.push(
