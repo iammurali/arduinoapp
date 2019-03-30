@@ -37,16 +37,16 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
   _buildChild(int machinestatus){
     print("machine status"+machinestatus.toString());
     if(machinestatus == 4){
-      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS : DOWN", Colors.yellow);
+      return _iconBuilder(Icons.broken_image, "MACHINE STATUS : DOWN", Colors.yellow);
     }
      if(machinestatus == 1){
-      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS: RUN", Colors.green);
+      return _iconBuilder(Icons.broken_image, "MACHINE STATUS: RUN", Colors.green);
     }
      if(machinestatus == 3){
-      return _iconBuilder(Icons.broken_image, "AIDA 1 STATUS: STOP", Colors.red);
+      return _iconBuilder(Icons.broken_image, "MACHINE STATUS: STOP", Colors.red);
     }
     if(machinestatus == 0){
-      return _iconBuilder(Icons.broken_image, "", Colors.red);
+      return _iconBuilder(Icons.broken_image, "MACHINE STATUS: OFF", Colors.blue);
     }
   }
 
@@ -55,18 +55,19 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
 
     _printMachineStatus(){
 
-      if(widget.value["machineStaus"]==1){return new Text("AIDA 1 STATUS : RUNNING");}
-      if(widget.value["machineStaus"]==4){return new Text("AIDA 1 STATUS : DOWN");}
-      if(widget.value["machineStaus"]==3){return new Text("AIDA 1 STATUS : STOPED");}
-      if(widget.value["machineStaus"]==0){return new Text("AIDA 1 STATUS : OFF");}
+      if(widget.value["machineStaus"]==1){return new Text("MACHINE STATUS : RUNNING");}
+      if(widget.value["machineStaus"]==4){return new Text("MACHINE STATUS : DOWN");}
+      if(widget.value["machineStaus"]==3){return new Text("MACHINE STATUS : STOPED");}
+      if(widget.value["machineStaus"]==0){return new Text("MACHINE STATUS : OFF");}
 
     }
 
-
+//GRAPH
     var data = [
       new ClicksPerYear('STOP TIME', widget.value["problemtime"].round(), Colors.red),
       new ClicksPerYear('RUN TIME', widget.value["elapsedTime"].round(), Colors.green),
-      new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent)
+      new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent),
+      new ClicksPerYear('OFF TIME',widget.value["offtimeB"].round(),Colors.blue),
 //           new ClicksPerYear('TIME', widget.value["idleTime"].round(), Colors.green)
     ];
 
@@ -123,19 +124,19 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
                 FlatButton( onPressed: () => {}, child: Text(""),padding: EdgeInsets.all(5.0),),
                 Chip(
 
-                    label: Text('B',style: TextStyle(color: Colors.cyanAccent))
+                    label: Text(' B ',style: TextStyle(color: Colors.cyanAccent))
                 ),
                 Chip(
 
-                    label: Text('A',style: TextStyle(color: Colors.cyanAccent))
+                    label: Text(' A ',style: TextStyle(color: Colors.cyanAccent))
                 ),
                 Chip(
 
-                    label: Text('C',style: TextStyle(color: Colors.cyanAccent))
+                    label: Text(' C ',style: TextStyle(color: Colors.cyanAccent))
                 ),
 
                 Container(
-                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 21.0, 0.0),
                 ),
               ],
             ),
@@ -163,6 +164,7 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
                 FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
                 FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
                 FlatButton(color: Colors.green, onPressed: () => {}, child: Text(widget.value["elapsedTimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
+
               ],
             ),
             new  Row(
@@ -183,6 +185,16 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
                 FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
                 FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
                 FlatButton(color: Colors.redAccent, onPressed: () => {}, child: Text(widget.value["problemtimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
+              ],
+            ),
+            new  Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(color: Colors.black54, onPressed: () => {}, child: Text("OFF TIME   :"),padding: EdgeInsets.all(5.0),),
+                FlatButton(color: Colors.blue, onPressed: () => {}, child: Text(widget.value["offtimeB"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.blue, onPressed: () => {}, child: Text(widget.value["offtimeA"].toString()+"%",style: TextStyle(color: Colors.black))),
+                FlatButton(color: Colors.blue, onPressed: () => {}, child: Text(widget.value["offtimeC"].toString()+"%",style: TextStyle(color: Colors.black)))
               ],
             ),
 
