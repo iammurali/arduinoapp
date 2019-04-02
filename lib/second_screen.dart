@@ -67,7 +67,7 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
       new ClicksPerYear('STOP TIME', widget.value["problemtime"].round(), Colors.red),
       new ClicksPerYear('RUN TIME', widget.value["elapsedTime"].round(), Colors.green),
       new ClicksPerYear('DOWN TIME', widget.value["idleTime"].round(), Colors.yellowAccent),
-      new ClicksPerYear('OFF TIME',widget.value["offtimeB"].round(),Colors.blue),
+      new ClicksPerYear('OFF TIME',widget.value["offtime"].round(),Colors.blue),
 //           new ClicksPerYear('TIME', widget.value["idleTime"].round(), Colors.green)
     ];
 
@@ -96,10 +96,10 @@ _iconBuilder(IconData icon, String status, MaterialColor color){
 
      var chartWidget = new Container(
       // margin: const EdgeInsets.all(1.0),
-      color: const Color(0xFF607D8B),
+      color: const Color(0XFFFFFFFF),
       child: new SizedBox(
-        height: 200.0,
-        width: 300.0,
+        height: 250.0,
+        width: 350.0,
         child: chart,
       ),
     );
