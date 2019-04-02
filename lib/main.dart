@@ -67,47 +67,47 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List data;
-  Timer _timer;
-  Timer _blinkTimer;
-  Color _blinkOnColor;
-  Color _blinkProblemColor;
-  Color _blinkIdleColor;
- Color _blinkoffColor;
-  int _blinkStatus;
+              Timer _timer;
+              Timer _blinkTimer;
+              Color _blinkOnColor;
+              Color _blinkProblemColor;
+              Color _blinkIdleColor;
+              Color _blinkoffColor;
+              int _blinkStatus;
 
-  @override
-  void initState(){
-    super.initState();
-    this.fetchPost();
-    _blinkOnColor = Colors.transparent;
-    _blinkStatus = 1;
-    // this.getIp();
-    const threeSec = const Duration(seconds:3);
-     const oneSec = const Duration(seconds:1);
-    _timer = new Timer.periodic(threeSec, (Timer t) => this.fetchPost());
-    _blinkTimer = new Timer.periodic(oneSec, (Timer t) =>this.changeColor());
-  }
+              @override
+              void initState(){
+                super.initState();
+                this.fetchPost();
+                _blinkOnColor = Colors.transparent;
+                _blinkStatus = 1;
+                // this.getIp();
+                const threeSec = const Duration(seconds:3);
+                const oneSec = const Duration(seconds:1);
+                _timer = new Timer.periodic(threeSec, (Timer t) => this.fetchPost());
+                _blinkTimer = new Timer.periodic(oneSec, (Timer t) =>this.changeColor());
+              }
 
 
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    _blinkTimer.cancel();
-    super.dispose();
-  }
+              @override
+              void dispose() {
+                _timer.cancel();
+                _blinkTimer.cancel();
+                super.dispose();
+              }
 
-  changeColor(){
-      // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
+              changeColor(){
+                // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
 
-    if(_blinkStatus == 1){
-      // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
+                if(_blinkStatus == 1){
+                  // print("############****** Blink variable"+ _blinkStatus.toString() + "*********##########");
 
-        setState(() {
-              _blinkOnColor = Colors.lightGreen[400];
-              _blinkProblemColor = Colors.redAccent;
-              _blinkIdleColor = Colors.yellow[200];
-              _blinkoffColor = Colors.blue;
+                  setState(() {
+                    _blinkOnColor = Colors.lightGreen[400];
+                    _blinkProblemColor = Colors.redAccent;
+                    _blinkIdleColor = Colors.yellow;
+                    _blinkoffColor = Colors.blue;
         });
               _blinkStatus = 0;
     }else{
@@ -168,16 +168,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     }
     if (machinestatus == 3) {
-      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], _blinkProblemColor, Colors.yellow[200],Colors.blue);//PROBLEM
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], _blinkProblemColor, Colors.yellow,Colors.blue);//PROBLEM
     }
     if(machinestatus == 2){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],Colors.blue);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow,Colors.blue);
     }
     if(machinestatus == 0){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],_blinkoffColor);//OFF
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow,_blinkoffColor);//OFF
     }
     if(machinestatus == 5){
-      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow[200],Colors.blue);
+      return _iconBuilder(elapsedTime, problemTime, idleTime,offtime,Colors.lightGreen[400], Colors.redAccent, Colors.yellow,Colors.blue);
     }
   }
 
@@ -215,8 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 new Container(padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                 color: Colors.white,
                 child: Text(formattedDate,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.cyanAccent[400])),),
-              Text("RUN",style: TextStyle(fontWeight: FontWeight.bold)),
-              Text("STOP",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("  RUN",style: TextStyle(fontWeight: FontWeight.bold)),
+              Text("  STOP",style: TextStyle(fontWeight: FontWeight.bold)),
               Text("DOWN",style: TextStyle(fontWeight: FontWeight.bold)),
                 Text("OFF",style: TextStyle(fontWeight: FontWeight.bold)),
 
